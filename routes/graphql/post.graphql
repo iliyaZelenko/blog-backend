@@ -1,0 +1,35 @@
+type Post {
+    id: ID!
+    createdAt: DateTime! @rename(attribute: "created_at")
+    updatedAt: DateTime! @rename(attribute: "updated_at")
+    title: String!
+    titleSlug: String! @rename(attribute: "title_slug")
+    content: String!
+    contentShort: String! @rename(attribute: "content_short")
+    ratingValue: Int! @rename(attribute: "rating_value")
+    ratingValuePositive: Int! @rename(attribute: "rating_value_positive")
+    ratingValueNegative: Int! @rename(attribute: "rating_value_negative")
+    commentsCount: Int! @rename(attribute: "comments_count")
+
+    # ratingInfo: RatingInfo! @field(resolver: "App\\Http\\GraphQL\\Types\\PostType@getRatingInfo")
+
+    # Relations
+    user: User! @belongsTo
+    category: Category! @belongsTo
+    # comments: [Comment]! @hasMany(type: "paginator")
+    comments: [Comment]! @paginate(builder: "App\\Http\\GraphQL\\Types\\PostType@getRootComments") # @hasMany(type: "paginator") # @field(resolver: "App\\Http\\GraphQL\\Types\\PostType@getRootComments")
+
+    tags: [Tag]! @belongsToMany
+}
+
+type Tag {
+    id: ID!
+    createdAt: DateTime! @rename(attribute: "created_at")
+    updatedAt: DateTime! @rename(attribute: "updated_at")
+    name: String!
+    about: String!
+    postsCount: Int! @rename(attribute: "posts_count")
+
+    # Relations
+    category: Category! @belongsTo
+}

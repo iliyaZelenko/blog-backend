@@ -1,0 +1,61 @@
+#import ./types.graphql
+#import ./category.graphql
+#import ./user.graphql
+#import ./post.graphql
+#import ./comment.graphql
+
+type Query {
+    ## Users ##
+    # the current auth user (dont forget to provide auth header)
+    me: User @auth
+    users: [User!]! @paginate
+    user(id: ID @eq): User @find
+
+    ## Posts ##
+    post(id: ID @eq): Post @find
+    # TODO было type: "paginator"
+    allPosts: [Post!]! @paginate(scopes: ["OrderByDESC"])
+
+    ## Comments ##
+    comment(id: ID @eq): Comment @find
+    comments(post_id: ID @eq): [Comment]! @paginate(scopes: ["IsRoot", "OrderByDESC"])
+
+    ## Categories ##
+    category(id: ID @eq): Category @find
+    rootCategories: [Category!]! @field(resolver: "CategoriesQuery@getRoots")
+
+    ## Tags ##
+    tags: [Tag!]! @all # (category_id: [Int] @in)
+}
+
+type Mutation {
+    createUser(
+        name: String @rules(apply: ["required"])
+        email: String @rules(apply: ["required", "email", "unique:users,email"])
+    ): User @create(model: "User")
+    createPost(
+        title: String @rules(apply: ["required"])
+        content: String @rules(apply: ["required"])
+        user_id: ID @rules(apply: ["required"])
+    ): Post @create
+    updateUser(
+        id: ID @rules(apply: ["required"])
+        name: String
+        email: String @rules(apply: ["email"])
+    ): User @update(model: "User")
+    deleteUser(
+        id: ID @rules(apply: ["required"])
+    ): User @delete(model: "User")
+}
+
+extend type Mutation { # TODO @group(middleware: ["auth:api"])
+    createComment(
+        input: CommentCreationInput
+    ): Comment @field(resolver: "App\\Http\\GraphQL\\Mutations\\CommentMutator@create")
+}
+
+
+type RatingInfo {
+    value: Int!
+}
+

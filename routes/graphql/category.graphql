@@ -1,0 +1,27 @@
+type Category {
+    id: ID!
+    name: String!
+    nameSlug: String! @rename(attribute: "name_slug")
+    path: String!
+    description: String!
+    parentId: ID! @rename(attribute: "parent_id")
+    postsCount: Int! @rename(attribute: "posts_count")
+    allPostsCount: Int! @rename(attribute: "all_posts_count")
+    haveChild: Boolean!
+    ancestorsAndSelfInfo: [AncestorsAndSelfInfo!]!
+    childrenCount: Int! @rename(attribute: "children_count")
+    allChildrenCount: Int! @rename(attribute: "all_children_count")
+    createdAt: DateTime! @rename(attribute: "created_at")
+    updatedAt: DateTime! @rename(attribute: "updated_at")
+
+    # Relations
+    posts: [Post] @hasMany(type: "paginator")
+    children: [Category] @hasMany
+}
+
+type AncestorsAndSelfInfo {
+    id: ID!
+    name: String!
+    nameSlug: String! @rename(attribute: "name_slug")
+    path: String!
+}

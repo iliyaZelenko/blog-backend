@@ -1,0 +1,26 @@
+type Comment {
+    id: ID!
+    createdAt: DateTime! @rename(attribute: "created_at")
+    updatedAt: DateTime! @rename(attribute: "updated_at")
+    content: String!
+    ratingValue: Int! @rename(attribute: "rating_value")
+    ratingValuePositive: Int! @rename(attribute: "rating_value_positive")
+    ratingValueNegative: Int! @rename(attribute: "rating_value_negative")
+    repliesCount: Int! @rename(attribute: "replies_count")
+    allRepliesCount: Int! @rename(attribute: "all_replies_count")
+
+    # Relations
+    user: User! @belongsTo
+    post: Post! @belongsTo
+    repliedComment: Comment @belongsTo
+    repliesComments: [Comment]! @hasMany(type: "paginator")
+    # TODO sort by desc
+    allNestedRepliesComments: [Comment]! @paginate(builder: "App\\Http\\GraphQL\\Types\\CommentType@getAllNestedRepliesComments") # @field(resolver: "App\\Models\\Comment@allNestedRepliesComments") # @hasMany(type: "paginator")
+}
+
+input CommentCreationInput {
+    postId: Int!, @rules(apply: ["exists:posts,id"])
+    userId: Int!, @rules(apply: ["exists:users,id"])
+    commentId: Int @rules(apply: ["nullable", "exists:comments,id"])
+    content: String @rules(apply: ["required", "min:5", "max:150"])
+}

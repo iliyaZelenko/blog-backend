@@ -4,3 +4,7 @@
 там очень много возможностей. Также есть GraphiQL через пакет `mll-lab/laravel-graphql-playground`.
 - Laravel пакет для работы с JWT: `tymon/jwt-auth`.
 - NestedSet категории через Laravel пакет [baum](https://github.com/etrepat/baum)
+
+## Frontend
+
+https://github.com/iliyaZelenko/blog-frontend

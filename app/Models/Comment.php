@@ -40,7 +40,7 @@ class Comment extends BaseModelBaum
         return $this->belongsTo(__CLASS__, 'comment_id');
     }
 
-    public function repliesComments(): HasMany
+    public function repliesComments(): ?HasMany
     {
         return $this->children(); // $this->hasMany(__CLASS__);
     }

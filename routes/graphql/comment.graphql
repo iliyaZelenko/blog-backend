@@ -13,7 +13,8 @@ type Comment {
     user: User! @belongsTo
     post: Post! @belongsTo
     repliedComment: Comment @belongsTo
-    repliesComments: [Comment]! @hasMany(type: "paginator")
+    # TODO было [Comment]! Так правильней но вызывает ошибку на heroku
+    repliesComments: [Comment] @hasMany(type: "paginator")
     # TODO sort by desc
     allNestedRepliesComments: [Comment]! @paginate(builder: "App\\Http\\GraphQL\\Types\\CommentType@getAllNestedRepliesComments") # @field(resolver: "App\\Models\\Comment@allNestedRepliesComments") # @hasMany(type: "paginator")
 }

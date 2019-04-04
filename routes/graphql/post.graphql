@@ -33,3 +33,12 @@ type Tag {
     # Relations
     category: Category! @belongsTo
 }
+
+input PostCreationInput {
+    categoryId: Int!, @rules(apply: ["exists:categories,id"])
+    userId: Int!, @rules(apply: ["exists:users,id"])
+    title: String!, @rules(apply: ["required", "min:5", "max:150"])
+    contentShort: String!, @rules(apply: ["required", "min:10", "max:600"])
+    content: String!, @rules(apply: ["required", "min:15", "max:10000"])
+    tags: [Int]!, @rules(apply: ["required", "array", "max:10000"]) # TODO update to 3 version and use @rulesForArray(apply: ["exists:post_tag,id"])
+}

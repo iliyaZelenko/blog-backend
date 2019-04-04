@@ -33,11 +33,6 @@ type Mutation {
         name: String @rules(apply: ["required"])
         email: String @rules(apply: ["required", "email", "unique:users,email"])
     ): User @create(model: "User")
-    createPost(
-        title: String @rules(apply: ["required"])
-        content: String @rules(apply: ["required"])
-        user_id: ID @rules(apply: ["required"])
-    ): Post @create
     updateUser(
         id: ID @rules(apply: ["required"])
         name: String
@@ -48,10 +43,14 @@ type Mutation {
     ): User @delete(model: "User")
 }
 
-extend type Mutation { # TODO @group(middleware: ["auth:api"])
+# TODO @group(middleware: ["auth:api"])
+extend type Mutation {
     createComment(
         input: CommentCreationInput
     ): Comment @field(resolver: "App\\Http\\GraphQL\\Mutations\\CommentMutator@create")
+    createPost(
+        input: PostCreationInput
+    ): Post @field(resolver: "App\\Http\\GraphQL\\Mutations\\PostMutator@create")
 }
 
 
